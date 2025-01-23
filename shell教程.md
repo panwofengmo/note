@@ -203,9 +203,209 @@
    + 一款表达式计算工具，使用它能完成表达式的求值操作
    + 表达式和运算符之间要有空格
    + 完整的表达式要被 \` \` 包含，注意这个字符不是常用的单引号，在 Esc 键下边
-2. 算术运算符
-   + 乘号(*)前边必须加反斜杠(\)才能实现乘法运算：
+2. **算术运算符**
+   + 乘号(*)前边必须加反斜杠`(\)`才能实现乘法运算：
       ```
       val=`expr $a \* $b`
       ```
+3. **关系运算符**
+   + 关系运算符只支持数字，不支持字符串，除非字符串的值是数字
+   + `-eq`: 是否相等; `[ $a -eq $b ]`
+   + `-ne`: 是否不相等; `[ $a -ne $b ] `
+   + `-gt`: 是否大于; `[ $a -gt $b ]`
+   + `-lt`: 是否小于; `[ $a -lt $b ] `
+   + `-ge`: 是否大于等于; `[ $a -ge $b ]`
+   + `-le`: 是否小于等于; `[ $a -le $b ] `
+4. **布尔运算符**
+   + `!`：非运算；[ ! false ] 返回 true。
+   + `-o`：或运算，有一个表达式为 true 则返回 true
+   + `-a`：与运算，两个表达式都为 true 才返回 true
+5. **字符串运算符**
+   + `=`：相等；`[ $a = $b ]`
+   + `!=`：不相等时为true；`[ $a != $b ]`
+   + `-z`：检测字符串长度是否为0，为0返回 true；`[ -z $a ]`
+6. 文件测试运算符
+7. **自增和自减操作符**
+   + 使用 let 命令
+      ```
+      let num++         # 自增
+      let num--         # 自减
+      ```
+   + 使用 `$(( ))` 进行算术运算
+      + `$(( ))` 语法也是进行算术运算的一种方式。
+      ```
+      num=$((num + 1))  # 自增
+      num=$((num - 1))  # 自减
+      ```
+   + 使用 expr 命令
+     + expr 命令可以用于算术运算，但在现代脚本中不如 let 和 $(( )) 常用。
+      ```
+      num=$(expr $num + 1)
+      ```
+   + 使用 (( )) 进行算术运算
+      ```
+      ((num++))   # 自增
+      ((num--))   # 自减
+      ```
 
+# 七、Shell echo命令
+1. 显示变量
+   ```
+   #!/bin/sh
+   read name 
+   echo "$name It is a test"
+
+   #可以在标准输入将变量输入
+   ```
+2. 显示命令
+   + 注意： 这里使用的是反引号 `, 而不是单引号 '
+   + 能执行反引号内的命令
+   ```
+   echo `date`
+   #输出结果：Thu Jul 24 10:08:46 CST 2014
+   echo `ls`
+   ```
+
+# 八、Shell printf 命令
+1. 实例：
+   ```
+   printf "Hello, Shell\n"   
+   #输出结果：Hello, Shell
+
+   printf "%s\n" abc def
+   #输出结果：
+   abc
+   def
+   ```
+
+# 九、Shell test 命令
+1. test 命令用于检查某个条件是否成立
+   ```
+   num1=100
+   num2=100
+   if test $[num1] -eq $[num2]
+   then
+      echo '两个数相等！'
+   else
+      echo '两个数不相等！'
+   fi
+
+   #输出结果：两个数相等！
+
+   cd /bin
+   if test -e ./bash
+   then
+      echo '文件已存在!'
+   else
+      echo '文件不存在!'
+   fi
+   ```
+
+# 十、Shell 流程控制
+1. `if else-if else`
+   + 语法格式
+      ```
+      if condition1
+      then
+         command1
+      elif condition2 
+      then 
+         command2
+      else
+         commandN
+      fi
+
+      ```
+2. **条件判断的几种方式**
+   + `[ $a -gt $b ]`
+   + `(( $a > $b ))`
+   + `test $a -gt $b`
+
+3. **for 循环**
+   + 格式
+      ```
+      for var in item1 item2 ... itemN
+      do
+         command1
+         command2
+         ...
+         commandN
+      done
+
+      ```
+   + 实例：
+      ```
+      for loop in 1 2 3 4 5
+      do
+         echo "The value is: $loop"
+      done
+      ```
+4. **while 语句**
+   + 格式：
+      ```
+      while condition
+      do
+         command
+      done
+      ```
+   + 实例
+      ```
+      #!/bin/bash
+      int=1
+      while(( $int<=5 ))
+      do
+         echo $int
+         let "int++"
+      done
+      ```
+
+# 十一、Shell 函数
+1. 函数不需要带参数，即函数格式：func(){ ... }
+2. 函数返回值
+   + return 返回，如果不加，将以最后一条命令运行结果
+   + return 语句只能返回一个介于 0 到 255 之间的整数，而两个输入数字的和可能超过这个范围
+   + 函数返回值在调用该函数后通过 $? 来获得
+     + 实例：
+         ```
+         funWithReturn(){
+            return 10
+         }
+         funWithReturn
+         echo "返回值：$? "   #返回值为10
+         ```
+3. 函数参数
+   + 通过`$n`的形式来获取参数的值，例如，`$1`表示第一个参数，`$2`表示第二个参数
+   + `$10` 不能获取第十个参数，获取第十个参数需要`${10}`。当n>=10时，需要使用`${n}`来获取参数
+
+# 十二、Shell 输入/输出重定向
+1. **文件描述符**
+   + stdin的文件描述符为0
+   + stdout 的文件描述符为1
+   + stderr的文件描述符为2
+2. `/dev/null`
+   + /dev/null 是一个特殊的文件，写入到它的内容都会被丢弃
+   + 将命令的输出重定向到它，会起到"禁止输出"的效果
+3. `$ command > /dev/null 2>&1
+`
+   + 屏蔽 stdout 和 stderr
+
+# 十三、Shell 文件包含
+1. 格式：
+   + `. filename`
+   + `source filename`
+   + 实例：
+      ```
+      #!/bin/bash
+      url="http://www.runoob.com"
+      #以上代码为文件test1.sh的内容
+
+      #!/bin/bash
+      #使用 . 号来引用test1.sh 文件
+      . ./test1.sh
+      echo "菜鸟教程官网地址：$url"
+      #以上代码为文件test2.sh的内容
+
+      $ chmod +x test2.sh
+      $ ./test2.sh 
+      菜鸟教程官网地址：http://www.runoob.com
+      ```
