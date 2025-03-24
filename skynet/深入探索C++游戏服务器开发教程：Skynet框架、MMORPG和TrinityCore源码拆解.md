@@ -17,6 +17,17 @@
 
 # 二、actor的编程思路
 1. 要从业务角度去划分actor进程
+2. 启动skynet:
+  + 在存放skynt文件夹和skynet_game_1文件夹的同级目录，调用./skynet/skynet ./skynet_game_1/config.game
+  + 客户端连接到skynet：telnet 127.0.0.1 8888
+3. 各个模块负责的功能
+   + main.lua: 调起redis和hall, 将监听fd与accept函数绑定
+   + agent.lua: 注册、登陆、准备游戏
+   + room.lua: 负责猜数字游戏的整个完整模块：开始、猜数字、结束、上线、掉线
+   + hall.lua: 负责拉玩家到房间
+
+# 三、底层运行逻辑：actor是如何调度的
 
 
-进度：0：43：0
+
+进度：01:00:00
