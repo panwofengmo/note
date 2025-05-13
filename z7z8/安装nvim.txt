@@ -1,0 +1,193 @@
+以下是针对 Linux 系统安装 Neovim 并实现 C++/Lua 开发环境的完整方案，基于 2024 年最新实践：
+
+一、安装 Neovim（推荐 v0.9+）
+1. 主流发行版安装方式
+bash
+Copy Code
+# Ubuntu/Debian (官方最新版)
+sudo add-apt-repository ppa:neovim-ppa/unstable
+sudo apt update && sudo apt install neovim
+
+# RHEL/CentOS
+sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo dnf install neovim
+
+# Arch Linux
+sudo pacman -S neovim
+
+# 通用方法（若包管理器版本过低）
+curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+chmod +x nvim.appimage && sudo mv nvim.appimage /usr/local/bin/nvim
+
+2. 验证安装
+bash
+Copy Code
+nvim --version | head -n1  # 应输出 NVIM v0.9+
+
+二、配置基础环境
+1. 创建配置目录结构
+bash
+Copy Code
+mkdir -p ~/.config/nvim/{lua,after}  # 现代 Neovim 配置路径
+
+2. 初始化配置文件 (~/.config/nvim/init.lua)
+lua
+Copy Code
+-- 基础设置
+vim.opt.number = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.termguicolors = true  -- 支持真彩色
+
+三、插件管理（使用 Lazy.nvim）
+1. 安装 Lazy.nvim 插件管理器
+lua
+Copy Code
+-- 在 init.lua 开头添加
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+2. 插件配置
+lua
+Copy Code
+require("lazy").setup({
+  -- LSP 核心组件
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    }
+  },
+
+  -- 自动补全引擎
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "L3MON4D3/LuaSnip",
+    }
+  },
+
+  -- 函数跳转增强
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+  
+  -- 可视化调试
+  "simrat39/symbols-outline.nvim"
+})
+
+四、配置语言服务器（LSP）
+1. 安装 Mason 管理 LSP
+lua
+Copy Code
+-- 在 init.lua 中添加
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { "clangd", "lua_ls" }  -- C++ 和 Lua 语言服务器
+})
+
+-- LSP 配置
+local lspconfig = require("lspconfig")
+lspconfig.clangd.setup{}  -- C/C++
+lspconfig.lua_ls.setup {  -- Lua
+  settings = {
+    Lua = {
+      runtime = { version = 'LuaJIT' },
+      workspace = { checkThirdParty = false }
+    }
+  }
+}
+
+2. 配置自动补全
+lua
+Copy Code
+-- 在 init.lua 中添加
+local cmp = require('cmp')
+cmp.setup({
+  mapping = cmp.mapping.preset.insert({
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },  -- LSP 补全
+    { name = 'buffer' },     -- 缓冲区文字
+  })
+})
+
+五、实现代码跳转
+1. 快捷跳转配置
+lua
+Copy Code
+-- 跳转到定义
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to Definition' })
+
+-- 查找引用
+vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { desc = 'Find References' })
+
+-- 符号大纲
+vim.keymap.set('n', '<F2>', '<cmd>SymbolsOutline<CR>', { desc = 'Toggle Symbols Outline' })
+
+2. 安装依赖工具
+bash
+Copy Code
+# 安装 ripgrep 增强搜索
+sudo apt install ripgrep  # Debian/Ubuntu
+sudo dnf install ripgrep  # RHEL/CentOS
+
+# 安装 clangd (C++ LSP)
+sudo apt install clangd-15  # Ubuntu
+sudo dnf install clang      # RHEL
+
+六、验证功能
+1. 测试 C++ 项目
+cpp
+Copy Code
+// 创建测试文件 test.cpp
+#include <iostream>
+
+void hello() {
+    std::cout << "Hello Neovim!\n";
+}
+
+int main() {
+    hello();  // 此处触发补全和跳转
+    return 0;
+}
+
+2. 测试 Lua 项目
+lua
+Copy Code
+-- 创建测试文件 test.lua
+local function greet(name)
+    print("Hello " .. name)
+end
+
+greet("World")  -- 此处触发补全和跳转
+
+操作验证步骤
+bash
+Copy Code
+nvim test.cpp  # 光标移至 hello() 按 gd 应跳转到函数定义
+nvim test.lua  # 触发补全应显示 print 等内置函数
+
+扩展优化建议
+调试支持‌：安装 nvim-dap 插件实现可视化调试
+代码格式化‌：配置 conform.nvim 实现自动格式化
+项目管理‌：使用 telescope-project.nvim 快速切换项目
+
+该方案利用现代 Neovim 的 LSP 架构，相比传统 Vim 可获得 IDE 级的代码导航体验，同时保持终端环境的高效性。
