@@ -1,5 +1,41 @@
 https://linux.cn/article-8841-1.html
 
+1. 安装git
+	+ sudo apt update && sudo apt install git -y
+
+2. 配置全局账户
+	+ git config --global user.name "YourName"
+	+ git config --global user.email "your_email@example.com"
+
+3. SSH密钥配置
+	+ 生成SSH密钥,默认保存在~/.ssh目录
+		+ ssh-keygen -t rsa -C "your_email@example.com"
+	+ 添加公钥到GitHub
+		+ cat ~/.ssh/id_rsa.pub
+		+ 登录GitHub，进入‌Settings → SSH and GPG Keys‌，添加新SSH Key并将公钥粘贴到对应字段
+	+ ‌测试SSH连接
+		+ ssh -T git@github.com		--一点都不需要改
+
+4. ‌克隆远程仓库
+	+ git clone git@github.com:username/repository.git
+
+5. 代码提交与推送
+	+ git add .                # 添加所有文件到暂存区
+	+ git commit -m "提交说明"  # 提交更改
+	+ git push origin main     # 推送到远程分支
+	+ 首次推送需关联远程仓库：git remote add origin 仓库URL
+
+6. ‌分支管理
+	+ git checkout -b new-feature  # 创建并切换到新分支
+	+ git merge main               # 合并分支到主分支
+
+
+
+
+
+
+
+
 1 remote
 	git remote -v：该命令将列出远程仓库的 URL
 	git remote add origin <URL>：这里使用 GitHub 提供的 URL 替换 <URL>。这样，你就可以添加、提交和推送更改到你的远程仓库了
