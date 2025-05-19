@@ -52,3 +52,9 @@
 		+ 返回当前服务的地址
 	+ skynet.error(msg)
 		+ 向log服务发送一条消息，即打印日志
+3. 代码实现
+	+ 1.创建main文件(Pmain.lua)；2.创建服务(ping.lua)；3.修改配置(Pconfig)；4.运行：``` ./skynet examples/Pconfig ```
+
+# 四、写Echo，练习网络编程
+1. 网络模块的API
+	+ 
