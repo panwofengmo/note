@@ -46,3 +46,9 @@
 		+ 给其他服务发送消息
 	+ skynet.call(addr, type, cmd, ...)
 		+ 给其他服务发送消息，是一个阻塞方法	
+	+ skynet.exit()
+		+ 结束当前服务
+	+ skynet.self()
+		+ 返回当前服务的地址
+	+ skynet.error(msg)
+		+ 向log服务发送一条消息，即打印日志
