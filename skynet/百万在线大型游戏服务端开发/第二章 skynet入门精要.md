@@ -57,4 +57,7 @@
 
 # 四、写Echo，练习网络编程
 1. 网络模块的API
-	+ 
+	+ socket.listen(host, port)
+		+ 监听客户端连接，其中host代表IP地址，port代表端口，它将返回监听socket的标志
+		+ 例：``` local listenfd = socket.listen("0.0.0.0", 8888)```
+		+ 代表监听8888端口，"0.0.0.0"代表不限制客户端的ip
