@@ -60,4 +60,23 @@
 	+ socket.listen(host, port)
 		+ 监听客户端连接，其中host代表IP地址，port代表端口，它将返回监听socket的标志
 		+ 例：``` local listenfd = socket.listen("0.0.0.0", 8888)```
-		+ 代表监听8888端口，"0.0.0.0"代表不限制客户端的ip
+		+ 代表监听8888端口，"0.0.0.0"代表不限制客户端的ip，listenfd保存着监听socket的标识
+	+ socket.start(fd, connect)
+		+ 新客户端连接时，回调方法connect会被调用。参数fd是socket.listen返回的标识；回调方法connect带有两个参数，第一个参数代表新连接的标识，第二个参数代表新连接的地址
+		+ 另外，connect获得一个新连接后并不会立即接收它的数据，需再次调用` socket.start(fd)`才会开始接收
+		+ 一般开启监听的完整写法为
+		```
+			function connect(fd, addr)
+				socket.start(fd)
+				print(fd.." connect addr:"..addr)
+			end
+
+			local listenfd = socket.listen("0.0.0.0", 8888)
+			socket.start(listenfd, connect)
+		```
+	+ socket.read(fd)
+		+ 从指定的Socket上读数据，它是个阻塞方法
+	+ socket.write(fd, data)
+		+ 把数据data置入写队列，Skynet框架会在Socket可写时发送它
+	+ socket.close(fd)
+		+ 关闭连接，它是个阻塞方法
