@@ -80,3 +80,37 @@
 		+ 把数据data置入写队列，Skynet框架会在Socket可写时发送它
 	+ socket.close(fd)
 		+ 关闭连接，它是个阻塞方法
+
+2. 代码实现
+	+ 代码2-5和代码2-6是服务端完整实现：1新连接的处理；2接收数据的处理；3发送数据的处理
+
+# 五、做留言板，使用数据库
+1. skynet.db.mysql模块提供操作mysql数据库的API
+	+ mysql.connect(args)
+		+ 连接数据库。参数args是一个lua表，包含数据库地址、用户名、密码登信息，API会返回数据库对象，用于后序操作
+		+ 例如：
+		```
+		local db = mysql.conncect({
+			host = "39.100.116.201",
+			port = 3306,
+			database = "message_board",
+			user = "root",
+			password = "123456",
+			max_packet_size = 1024 * 1024,
+			on_connect = nil
+		})
+		```
+		+ 代表连接地址为39.100.116.201、端口为3306、数据库名为message_board、用户名为root、密码为123456的MySQL数据库
+	+ db:query(sql)
+		+ 执行SQL语句。db代表mysql.connect返回的对象，参数sql代表SQL语句
+		+ 例如：
+			```
+			local res = db:query("select * from msgs")
+			```
+		+ 代表查询数据表msgs，返回值res代表查询的结果
+			```
+			db:query("insert into msgs (text) value (\'hello'\))
+			```
+		+ 代表把字符串“hello”插入msgs表的text栏位
+
+
