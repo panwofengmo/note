@@ -113,4 +113,62 @@
 			```
 		+ 代表把字符串“hello”插入msgs表的text栏位
 
+2. 准备数据库
+	+ mysql一开始没有设置root密码，使用：` sudo mysql`进入mysql，然后设置root密码
+	+ navicat连接不了mysql：1.要在腾讯云服务开放3306端口；2.在/etc/mysql/my.cnf追加以下代码
+		```
+		[mysqld]
+		skip-name-resolve
+		bind-address = 0.0.0.0
+		```
 
+3. 代码实现
+	+ 实现功能：客户端可通过：1.set命令将数据存到数据库；2.get命令获取数据库msgs表的所有数据
+	+ 相应代码：2-8，2-9，2-10
+
+# 六、监控服务状态
+1. debug_console服务：调试控制台服务，可以使用这个服务查看节点的内部状态
+
+2. 使用服务：
+	+ ` skynet.newservice("debug_console", 8000)`
+
+3. debug_console服务的监控指令
+	+ 更多控制台功能见https://github.com/cloudwu/skynet/wiki/DebugConsole
+	+ list指令
+		+ 用于列出所有的服务
+	+ mem指令
+		+ 用于显示所有lua服务占用的内存
+	+ stat指令
+		+ 用于列出所有Lua服务的CPU时间、处理的消息总数(message)、消息队列长度(mqlen)、被挂起的请求数据量(task)等。
+	+ netstat
+		+ 用于列出网络连接的概况
+		+ 可以看到这个服务在监听的端口
+
+# 七、使用节点集群建立分布式系统
+0. 更多API参见https://github.com/cloudwu/skynet/wiki/Cluster
+
+1. skynet.cluster模块提供节点间通信的API
+	+ cluster.reload(cfg)
+		+ 让本节点(重新)加载节点配置，参数cfg是个Lua表，指示集群中各节点的地址
+		+ 例如
+		```
+		cluster.reload({
+			node1 = "127.0.0.1:7001",
+			node2 = "127.0.0.1:7001",
+		})
+		```
+		+ 指明集群中有名为“node1”和“node2”的两个节点，node1监听本地7001端口，node2监听7002端口
+	+ cluster.open(node)
+		+ 启动节点。图2-33中的节点1需要调用cluster.open("node1")，节点2需要调用cluster.open("node2")，这样它们才知道自己是cluster.reload中的哪一项，并开启对应端口的监听
+	+ cluster.send(node, address, cmd, ...)
+		+ 向名为node的节点、地址为address的服务推送一条消息，这里参数cmd代表消息名
+	+ cluster.call(node, address, cmd, ...)
+		+ 它与cluster.send的功能相似，都是向另一个服务推送消息。不同的是，它是个阻塞方法，会等待对方的回应，对比表2-5可知，通过cluster发送的消息均为“lua”类型，无需指定
+	+ cluster.proxy(node, address)
+		+ 为远程节点上的服务创建一个本地代理服务，它会返回代理对象，之后可以用skynet.send、skynet.call操作该代理
+
+2. 节点配置
+	+ 创建Pconfig.c1和Pconfig.c2两个配置，分别对应两个节点
+
+3. 代码实现
+	+ 
