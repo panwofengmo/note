@@ -12,7 +12,7 @@
 	+ thread字段：表示启动多少个工作线程。通常不要将它设置超过CPU核心数。假设使用的是8核CPU，那么此处设置为8
 	+ start字段：主服务。制定skynet系统启动后，开启那个自定义的服务
 	+ 可以打开https://github.com/cloudwu/skynet/wiki/Config 查看skynet配置的详细说明
-	+ 后台末世：如果打开后台模式的两项配置，skynet将以后台模式启动。输出日志不再显示在控制台上，而是保存到logger项制定的文件中
+	+ 后台模式：如果打开后台模式的两项配置，skynet将以后台模式启动。输出日志不再显示在控制台上，而是保存到logger项制定的文件中
 
 3. 目录结构
 	+ examples：范例。KV数据库范例的部分服务(如main服务、simpledb服务)位于该目录下
@@ -38,12 +38,15 @@
 2. skynet中8个最重要的API
 	+ skynet.newservice(name, ...)
 		+ 启动新服务
+		+ 例子：` skynet.newservice("debug_console", 8000)`
 	+ skynet.start(func)
 		+ 用func函数初始化服务
-	+ skynet.dispatch(type, func)	(例：skynet.dispatch("lua", function(...)))
+	+ skynet.dispatch(type, func)
 		+ 绑定消息处理函数
+		+ 例：` skynet.dispatch("lua", function(...))`
 	+ skynet.send(addr, type, cmd, ...)
 		+ 给其他服务发送消息
+		+ 例：` skynet.send(ping1, "lua", "start", "node2", "pong")`
 	+ skynet.call(addr, type, cmd, ...)
 		+ 给其他服务发送消息，是一个阻塞方法	
 	+ skynet.exit()
