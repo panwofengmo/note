@@ -29,7 +29,10 @@ https://linux.cn/article-8841-1.html
 	+ git checkout -b new-feature  # 创建并切换到新分支
 	+ git merge main               # 合并分支到主分支
 
-
+7. 强制重置本地分支; 即将本地的更改舍弃，还原到线上最新
+	+ git fetch --all
+	+ git reset --hard origin/main
+	+ git pull
 
 
 
