@@ -1,9 +1,0 @@
-thread=8    --工作线程的数量，cpu有多少核心数，线程池的数量就是多少
-logger=nil  --日志
-harbor=0    --集群的参数
-start="main"    --启动第一个服务
-lua_path="./skynet/lualib/?.lua;".."./skynet/lualib/?/init.lua" --从哪里加载lua代码
-luaservice = "./skynet/service/?.lua;".."./game/?.lua;"     --从哪里加载actor
-lualoader = "./skynet/lualib/loader.lua"        --以什么样的方式去加载
-cpath = "./skynet/cservice/?.so"
-lua_cpath = "./skynet/luaclib/?.so"
