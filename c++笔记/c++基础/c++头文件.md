@@ -26,3 +26,36 @@
 1. `<cmath>` 库提供了许多函数，允许你对数字执行数学运算
 2. 使用
 	+ ` #inlcude <cmath>`
+
+
+# 四、ctime
+1. `<ctime>` 库允许你处理时间和日期
+2. 使用
+	+ ` #inlcude <ctime>`
+3. 常用函数
+	+ ` time()`：返回当前时间的时间戳
+		+ 示例：
+		```
+		time_t now = time(0);		//获取现在的时间戳
+		
+		time_t timestamp;
+		time(&timestamp);		// 获取当前日期和时间的时间戳
+		```
+	+ ` ctime()`：将时间戳转换为可读的日期和时间字符串
+		+ 示例：
+		```
+		char* date = ctime(&timestamp);		// 将时间戳timestamp转换为日期和时间字符串
+		```
+	+ ` mktime()`：将日期时间结构转换为时间戳
+		+ 示例：
+		```
+		struct tm timeinfo;
+		timeinfo.tm_year = 2023 - 1900;		// 年份减去1900
+		timeinfo.tm_mon = 11;		// 月份（0-11）
+		timeinfo.tm_mday = 25;		// 日期（1-31）
+		timeinfo.tm_hour = 12;		// 小时（0-23）
+		timeinfo.tm_min = 30;		// 分钟（0-59）
+		timeinfo.tm_sec = 0;		// 秒（0-61）
+		timeinfo.tm_isdst = -1;		// 夏令时标识符（-1 表示使用计算机的时区设置）
+		time_t timestamp = mktime(&timeinfo);		// 将日期时间结构转换为时间戳
+		```
