@@ -18,11 +18,21 @@
 
 # skynet.name函数
 1. 语法：`skynet.name(name, addr)`
-2. 功能：为一个地址命名
+2. 功能：为一个地址命名；配合skynet.localname可以获取相应名称的服务地址
 3. 参数：
 	- name：字符串，命名的名称
 	- addr：地址，要命名的地址
 4. 返回值：无
+
+# skynet.localname函数
+1. 语法：`skynet.localname(name)`
+2. 功能：查询一个 . 开头的名字对应的地址。它是一个非阻塞 API ，不可以查询跨节点的全局名字
+3. 参数：
+	- name：字符串，命名的名称
+4. 返回值：地址，查询到的地址
+5. 示例
+	+ ` local db_handle = skynet.localname(database)`
+
 
 # skynet.call函数
 1. 语法：` skynet.call(addr, type, ...)`
@@ -41,6 +51,13 @@ skynet.call(address, "lua", command, ...)
 # skynet.self函数
 
 # skynet.send函数
+1. 语法：`skynet.send(addr, typename, ...)`
+2. 功能：向一个地址发送消息
+3. 参数：
+	- addr：地址，要发送的地址; 当addr为number时，addr为相应服务的地址；当addr为string时，addr为相应服务的name
+	- typename：字符串，消息的类型
+	- ...：可变参数，消息的参数
+4. 返回值：无
 
 # skynet.dispatch函数
 
