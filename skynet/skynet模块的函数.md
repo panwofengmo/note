@@ -55,6 +55,7 @@ skynet.call(address, "lua", command, ...)
 2. 功能：向一个地址发送消息
 3. 参数：
 	- addr：地址，要发送的地址; 当addr为number时，addr为相应服务的地址；当addr为string时，addr为相应服务的name
+		+ send_message(lua_State *L, int source, int idx_type), 可以在这函数中找到相应逻辑
 	- typename：字符串，消息的类型
 	- ...：可变参数，消息的参数
 4. 返回值：无
