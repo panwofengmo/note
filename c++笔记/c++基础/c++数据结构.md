@@ -115,3 +115,26 @@
 		+ 使用 for-each 循环: ` for (int i : my_set)`
 		+ 使用迭代器: `for (set<int>::iterator it = my_set.begin(); it != my_set.end(); ++it)`
 
+8. 映射(map)
+	+ 一种键值对(key-value)的映射，每个元素都有一个键(key)和一个值(value)
+	+ 头文件：`#include <map>`
+	+ 常用操作
+		+ `insert()`：插入元素: `my_map.insert(pair<int, string>(1, "one"));`
+		+ `erase()`：删除元素: `my_map.erase(1);`
+		+ `size()`：返回映射中元素的数量
+		+ `empty()`：检查映射是否为空; 为空时返回true
+		+ `begin()`：返回指向映射第一个元素的迭代器
+		+ `end()`：返回指向映射最后一个元素的迭代器
+		+ `find()`：查找元素
+		+ `count()`：返回元素的数量：
+			+ 查找键是否存在：`my_map.count(1);    // 查找键是否存在，返回1或0`
+		+ `clear()`：清空映射
+	+ 遍历
+		+ 使用 for-each 循环: 
+		```
+		map<string, int> people = { {"Bill", 19}, {"Steve", 32}, {"Elon", 26} };
+		for (auto person : people) {
+			cout << person.first << " is: " << person.second << "\n";
+		}
+		```
+		+ 使用迭代器: `for (map<int, string>::iterator it = my_map.begin(); it != my_map.end(); ++it)`
