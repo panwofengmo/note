@@ -51,3 +51,16 @@
 	+ 读取文件
 		+ 使用`while` 循环与 `getline()` 函数一起逐行读取文件
 		+ ` while(getline(in_stream, str))`
+
+9. 构造函数
+	+ 默认构造函数
+		+ 只有当类没有定义任何构造函数时，编译器才会自动创建默认构造函数
+		+ = default的含义：` sales_data() = default;`
+			+ 显式地请求编译器生成默认构造函数
+	+ 当某个数据成员被构造函数初始值列表忽略时，该数据成员将被默认初始化
+		+ ```
+			sales_data(const std::string &s):m_bookNo(s) {}
+			sales_data(const std::string &s):m_bookNo(s), m_units_sold(0), m_revenue(0) {}		//与上面的效果相同
+		```
+
+
