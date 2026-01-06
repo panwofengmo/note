@@ -7,6 +7,8 @@
 	+ public：成员可以在类的外部访问
 	+ private：成员只能在类的内部访问
 	+ protected：成员可以在类的内部和派生类的内部访问
+	+ protected和private的区别：是否可以在派生类(子类)中访问
+
 
 3. 类方法
 	+ 方法是属于类的函数
@@ -63,4 +65,4 @@
 			sales_data(const std::string &s):m_bookNo(s), m_units_sold(0), m_revenue(0) {}		//与上面的效果相同
 		```
 
-
+10. 友元
