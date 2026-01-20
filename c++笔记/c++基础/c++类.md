@@ -61,6 +61,7 @@
 		+ 只有当类没有定义任何构造函数时，编译器才会自动创建默认构造函数
 		+ = default的含义：` sales_data() = default;`
 			+ 显式地请求编译器生成默认构造函数
+		+ 当类定义了其他构造函数时，默认构造函数就不会被自动创建；这个时候ClassA A; 是错误的
 	+ 当某个数据成员被构造函数初始值列表忽略时，该数据成员将被默认初始化
 		+ ```
 			sales_data(const std::string &s):m_bookNo(s) {}
@@ -70,13 +71,32 @@
 10. 友元
 	+ 定义和作用：类可以允许其他类或者函数访问它的非公有成员，方法是领其他类或者函数成员它的友元
 	+ 用法：只需要增加一条以` friend` 开头的声明语句，就可以将其他类或者函数声明为该类的友元
+	+ 声明：友元声明只能出现在类定义的内部。但是，除了类内部的友元声明以外，必须在友元声明之外再专门对函数/类进行一次声明。通常吧友元的声明和类本身放置在同一个头文件中(类的外部)
 	+ 示例：
 	```
 		class MyClass {
 			public:
 				MyClass(int i) : m_i(i) {}
-				friend void MyFriendFunction(MyClass&);
+				friend void MyFriendFunction(MyClass&);		//友元函数
+				friend class MyFriendClass;					//友元类
 			...
 		};
 	```
 
+11. 其他特性
+	+ 类型成员
+		+ ` typedef std::string::size_type pos;		//pos是一个类型成员`
+		+ 用来定义类型的成员必须先定义后使用
+	+ 可变数据变量(mutable)
+		+ mutable变量即使是在const成员函数内，也可以被修改
+		```
+			class MyClass {
+				public:
+					MyClass(int i) : m_i(i) {}
+					void MyFriendFunction() const {
+						m_i = 100;		//在const成员函数内，也可以修改mutable变量
+					}
+				private:
+					mutable int m_i;
+			};
+		```
