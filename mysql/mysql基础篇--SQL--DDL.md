@@ -50,8 +50,19 @@
 
 # 三、删除
 1. 删除和使用数据库
-	+ 删除数据库语法：`DROP DATABASE [IF EXISTS] database_name;`
-	+ 使用数据库语法：`USE database_name;`
+	+ 删除数据库语法：`DROP DATABASE [IF EXISTS] 数据库名;`
+	+ 使用数据库语法：`USE 数据库名;`
+
+2. 删除表
+	+ 删除表语法：`DROP TABLE [IF EXISTS] 表名;`
+
+3. 删除字段
+	+ 删除字段语法：`ALTER TABLE 表名 DROP COLUMN 字段名;`
+
+4. 删除表的所有数据
+	+ 语法：`TRUNCATE TABLE 表名;`
+
+
 
 # 四、数据类型
 1. 主要分为三类：数值类型、字符串类型、日期时间类型
@@ -84,5 +95,17 @@
 	+ TIMESTAMP(4): 时间戳类型, 占用4个字节, 格式为'YYYY-MM-DD HH:MM:SS'
 
 
+# 五、修改
+1. 修改表名
+	+ 语法：` ALTER TABLE 表名 RENAME TO 新表名;`
 
-b站视频：第09
+2. 表添加字段
+	+ 语法：` ALTER TABLE 表名 ADD COLUMN 表名 类型(长度) [COMMENT 注释] [约束];`
+	+ 实例：` ALTER TABLE emp ADD COLUMN nickname varchar(20) COMMENT '昵称';`
+
+3. 表修改字段的数据类型
+	+ 语法：` ALTER TABLE 表名 MODIFY COLUMN 字段名 新数据类型(长度);`
+
+4. 表修改字段的字段名和字段类型
+	+ 语法：` ALTER TABLE 表名 CHANGE COLUMN 旧字段名 新字段名 新数据类型(长度) [COMMENT 注释] [约束];`
+
