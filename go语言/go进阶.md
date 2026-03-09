@@ -373,7 +373,7 @@
 		fmt.Println(fileInfo.Size())
 	```
 
-2. 创建文件文件夹
+2. 文件夹操作
 	```
 		//新建文件夹
 		// error := os.Mkdir("./fileTest", os.ModePerm)
@@ -388,9 +388,40 @@
 		error2 := os.MkdirAll("./fileTest/a/b/c/d/e", os.ModePerm)
 
 		//删除文件夹
+		//只能删除单个空文件夹
 		error3 := os.Remove("./fileTest/a/b/c/d/e")
+
+		//如果存在多层文件，removeall相对来说比较危险，删除这个目录下的所有东西
+		error3 := os.RemoveAll("./fileTest/")
 	```
 
+3. 文件操作
+	```
+		//创建文件
+		//如果文件不存在，就创建再打开；如果文件存在，就打开
+		file, err := os.Create("test.txt")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+
+		//删除文件
+		os.Remove("test.txt")
+	```
+
+4. 文件的IO操作
+	```
+		//打开文件
+		file, err1 := os.Open("./fileTest/test.txt")
+
+		//打开文件：可选权限
+		//第二个参数是操作权限，第三个参数是创建文件时的权限
+		file2, err2 := os.OpenFile("./fileTest/test.txt", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	```
+
+
+01.02.00
 
 
 
