@@ -46,6 +46,20 @@
 		fmt.Printf("你输入的整数是：%d，浮点数是：%f，字符串是：%s\n", a, b, c)
 		```
 
+4. 使用switch判断类型
+	+ i.(type)必须在switch语句中使用
+	```
+	func testVarType(i any) {
+		switch i.(type) {
+		case string:
+			fmt.Println("string类型")
+		case int:
+			fmt.Println("int类型")
+		default:
+			fmt.Println("任何类型")
+		}
+	}
+	```
 
 
 

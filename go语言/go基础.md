@@ -34,7 +34,7 @@
 	+ 复合数据类型
 		+ array, slice, map, struct
 	+ 其他数据类型
-		+ interface, channel, pointer
+		+ interface, channel, pointer, nil(空也是一种类型)
 	+ 常量计数器iota
 		+ iota默认值为0。在一组const中，每次定义新的常量，那么它会自动+1
 		+ 用于定义枚举类型
