@@ -411,17 +411,56 @@
 	```
 
 4. 文件的IO操作
+	+ 读取：file.Read([]byte), 将file中的数据读取到[]byte中
 	```
 		//打开文件
 		file, err1 := os.Open("./fileTest/test.txt")
 
 		//打开文件：可选权限
 		//第二个参数是操作权限，第三个参数是创建文件时的权限
+		// O_APPEND:追加
 		file2, err2 := os.OpenFile("./fileTest/test.txt", os.O_RDWR|os.O_CREATE, os.ModePerm)
+
+		//循环读取
+		for {
+			//创建容器来缓存(创建切片，指定大小和容量)
+			cache := make([]byte, 2, 1024)
+			//读取文件内容
+			n, err := file.Read(cache)
+			if err == io.EOF {
+				break
+			}
+			fmt.Println("读取数据：", n)
+			fmt.Println(string(cache))
+		}
+
+		//写入
+		str_slice := []byte{67, 68, 69, 70}
+		n, err2 := file.Write(str_slice)
+
+		//写入字符串
+		str := "hello,world\n what are you doing"
+		n3, err3 := file.WriteString(str)
 	```
 
-
-01.02.00
+5. 文件偏移
+	+ Seek语法：
+		+ ` func (f *File) Seek(offset int64, whence int) (ret int64, err error)`
+		+ offset: 偏移量
+		+ whence: 从哪个位置开始偏移
+			+ 0: 从文件开头开始偏移
+			+ 1: 从当前位置开始偏移
+			+ 2: 从文件末尾开始偏移
+	+ 实例
+	```
+		//打开文件
+		file, err1 := os.Open("./fileTest/test.txt")
+		if err1 != nil {
+			fmt.Println(err1)
+			return
+		}
+		defer file.Close()
+	```
 
 
 
