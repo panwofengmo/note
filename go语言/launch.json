@@ -1,0 +1,25 @@
+{
+	// 使用 IntelliSense 了解相关属性。 
+	// 悬停以查看现有属性的描述。
+	// 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run Go Executable (main)", // 调试配置名称，可自定义
+			"type": "go",                      // 调试类型为 Go
+			"request": "launch",               // 启动类型（而非附加）
+			"mode": "exec",                    // 关键：exec 模式用于运行已编译的可执行文件
+			"program": "${workspaceFolder}/main", // 可执行文件 main 的绝对路径
+			// 可选：传递给可执行文件的命令行参数（按需添加）
+			"args": [],
+			// 可选：设置运行环境变量
+			"env": {
+				"GO111MODULE": "on"
+			},
+			// 可选：指定工作目录（默认是 workspaceFolder，按需修改）
+			"cwd": "${workspaceFolder}",
+			// 可选：开启调试日志，便于排查问题
+			"showLog": false
+		},
+	]
+}

@@ -460,14 +460,197 @@
 			return
 		}
 		defer file.Close()
+
+		//将文件指针移动到文件开头
+		file.Seek(0, io.SeekStart)
+		//将文件指针移动到文件开头的第3个光标
+		file1.Seek(3, io.SeekStart)
+	```
+
+6. bufio包
+	+ go语言自带的IO操作包。bufio，使用这个包可以大幅提升文件的读写效率
+	+ buf: 缓冲区
+	+ bufio提供了一个缓冲区，读和写都先在缓冲区中，最后再一次性读取或者写入到文件里，降低访问本地磁盘的次数
+
+
+# 四、groutine
+1. 进程、线程、协程
+	+ 程序：指令和数据的一个有序集合。本身没有任何含义，是一个静态的概念
+	+ 进程：执行程序的一次执行过程，是动态的概念。是系统资源分配的单位
+	+ 线程：一个进程中可以有多个线程，线程之间是并行的。线程是CPU调度和执行的单位
+	+ 协程：一个线程中可以有多个协程，协程之间是并发的。协程是用户级的线程，由用户程序自己调度;用户态的轻量级 “伪线程”，由编程语言运行时调度，而非操作系统内核
+
+2. groutine定义
+	+ go中使用Goroutine来实现并发编程。Goroutine是一种轻量级的线程，由Go语言运行时管理。它的创建和销毁成本都非常低，能够在一个进程中同时运行成千上万个Goroutine。
+	+ 创建Goroutine的成本很小，它就是一段代码，一个函数入口
+
+3. 使用
+	+ 在go语言中使用Goroutine非常简单，只需要在函数调用前添加关键字go即可。
+	+ 实例
+	```
+		//定义一个函数
+		func sayHello() {
+			fmt.Println("hello,world")
+		}
+		//调用函数
+		sayHello()
+		//创建一个Goroutine
+		go sayHello()
+	```
+
+4. 规则
+	+ 当新的Goroutine开始时，Goroutine调用立刻返回。与函数不同，go不等待Goroutine执行结束
+	+ 当Goroutine调用，并且Goroutine的任何返回值被忽略之后，go立即执行到下一行代码
+	+ main的Goroutine应该为其他的Goroutine执行。如果main的Goroutine终止了，程序将被终止，而其他Goroutine将不会执行
+
+5. 锁
+	+ 不要以共享内存的方式(即加锁)去通信，而要以通信的方式(即channel)去共享内存
+	+ 在Go语言中并不鼓励用锁保护共享状态的方式，在不同的groutine中分享信息(以共享内存的方式去通信)。
+	+ 而是鼓励通过channel将共享状态或共享状态的变化在各个groutine之间传递(以通信的方式去共享内存)。
+	+ 这样同样能像用锁一样保证在同一时间只有一个groutine访问共享状态
+	```
+	mutex.Lock()	//加锁
+	mutex.Unlock()	//解锁
+	```
+
+6. 同步等待
+	```
+	var wg sync.WaitGroup
+
+	wg.Add(2)	//添加一个groutine
+	go func() {
+		defer wg.Done()	//在groutine执行结束时调用Done()方法
+	}()
+	go func() {
+		defer wg.Done()	//在groutine执行结束时调用Done()方法
+	}()
+	wg.Wait()	//等待所有groutine执行结束
 	```
 
 
+# 五、channel
+1. 定义通道: ` var 通道名 chan 数据类型`
+	+ 定义完后，这个通道只能放指定数据类型的数据
+
+2. 使用规则(存、取)
+	+ 一个通道发送和接收数据，默认是阻塞的
+	+ 所有channel的发送和接收必须处于不同的Goroutine中。如：在main中使用` data := <- a`, 那么main就不能使用` a <- 100`
+	+ ch := make(chan int) 是**无缓冲通道**，它的规则是：
+	+ 发送方必须等接收方准备好，才能发送成功；
+	+ 接收方必须等发送方准备好，才能接收成功。
+	```
+		var a chan int
+		a = make(chan int)
+
+		a <- 100	//向通道a中发送数据100
+		data := <- a	//从通道a中接收数据
+	```
+
+3. 注意
+	+ go语言不建议我们使用锁机制来解决多线程问题，建议我们使用通道
+
+4. 死锁
+	+ 如果创建了chan，没有groutine来使用了，则会出现死锁
+
+5. 关闭通道
+	+ 关闭通道后，在该通道阻塞的协程会被唤醒
+	```
+		close(ch)
+
+		//可以使用for range来遍历通道中的数据
+		for v := range ch {	//当通道关闭后，会退出for循环
+			fmt.Println(v)
+		}
+	```
+
+6. 缓冲通道
+	+ 非缓冲通道：只能存放一个数据，发送和接收都是阻塞的
+	+ 缓冲通道：通道带了一个缓冲区，发送的数据直到缓冲区填满为止才会被阻塞。接收直到缓冲区清空，才会阻塞
+
+7. 定向通道
+	+ 定向通道：只能单向发送或接收数据的通道
+	+ 定义：`var 通道名 chan <- 数据类型`或`var 通道名 chan chan 数据类型`
+	+ 实例
+	```
+		var a chan <- int
+		a = make(chan <- int)
+
+		//只能写，不能读
+		a = make(chan <- int)
+		//只能读，不能写
+		a = make(<-chan int)
+
+		//可以将双向通道传给定向通道
+		func testFunc6(ch <-chan int) {
+			for data := range ch {
+				fmt.Println("读数据", data)
+			}
+		}
+		ch := make(chan int)
+		testFunc6(ch)
+	```
+
+8. Select
+	+ select语句：用于等待多个通道的读写操作，直到有一个操作就绪为止
+	+ 和switch类似，只能在通道中使用，case表达式需要是一个通道结果
+	+ 语法：
+	```
+	select {
+	case 通道1 <- 数据1:
+		//通道1发送数据1
+	case 通道2 <- 数据2:
+		//通道2发送数据2
+	case 通道3 <- 数据3:
+		//通道3发送数据3
+	default:
+		//如果没有通道就绪，执行default语句
+	}
+	```
+
+9. timer定时器
 
 
+# 六、反射
+1. 定义
+	+ 反射机制可以在程序运行的过程中获取信息，如：变量的类型、值；结构体的字段、方法等
+	+ 反射机制的使用需要导入`reflect`包
+	+ 一般是使用：` reflect.Type`和` reflect.Value`来获取信息和操作值
 
 
+2. 注意
+	+ 反射在正常的开发中很少用到。因为效率低
+	+ 开发一些脚手架，自动实现一些底层的判断
+	+ 如果我们不知道这个对象的信息，我们可以通过这个对象拿到代码中的一切
 
+3. 为什么不建议使用反射
+	+ 和反射相关的代码，不方便阅读
+	+ Go语言是静态类型语言，编译器可以找出开发时的错误，如果代码中有大量的反射代码，随时可能存在安全问题
+	+ 反射的性能很低，相对于正常的开发，至少慢2-3个数量级
+	+ 项目关键位置低耗时，一定不能用反射
 
+4. 反射获取变量信息
+	```
+	func reflectGetInfo(v interface{}) {
+		//1.获取参数的类型
+		getType := reflect.TypeOf(v)
+		fmt.Println(getType.Name()) //类型信息: "User"
+		fmt.Println(getType.Kind()) //找到上级的种类kind："struct"
 
+		//2.获取值
+		getValue := reflect.ValueOf(v)
+		fmt.Println("获取到value", getValue)
 
+		//获取字段，通过type扒出字段
+		for i := 0; i < getType.NumField(); i++ { //Type.NumField()获取这个类型有几个字段
+			field := getType.Field(i) //Field(index)得到字段的值
+			value := getValue.Field(i).Interface()
+			fmt.Printf("字段名：%s, 字段类型：%s, 字段值：%s\n", field.Name, field.Type, value)
+		}
+
+		//获取这个结构的方法
+		for i := 0; i < getType.NumMethod(); i++ {
+			method := getType.Method(i)
+			fmt.Printf("方法的名字：%s, 方法的类型：%s\n", method.Name, method.Type)
+		}
+	}
+	```
