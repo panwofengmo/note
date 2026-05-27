@@ -40,7 +40,8 @@
 		```
 		CREATE TABLE `ab_test` (
 			`uid` bigint(20) NOT NULL COMMENT '玩家ID',
-			`test_group_name` varchar(10240) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '测试组名字',			`test_id` bigint(20) NOT NULL COMMENT '测试ID',
+			`test_group_name` varchar(10240) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '测试组名字',	
+			`test_id` bigint(20) NOT NULL COMMENT '测试ID',
 			`test_group_id` bigint(20) NOT NULL COMMENT '测试组ID',
 			`create_time` datetime NOT NULL COMMENT '玩家加入本测试组时间',
 			PRIMARY KEY (`uid`) USING BTREE,
