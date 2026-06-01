@@ -47,28 +47,28 @@
 		fmt.Println(is_exist)
 	```
 
-6. 寻找这个字符串第一次出现的位置
+6. 寻找这个字符串第一次出现的位置(Index)
 	```
 		str := "hello, world"
 		indx_int := strings.Index(str, ", w")
 		fmt.Println(indx_int)
 	```
 
-7. 寻找这个字符串最后一次出现的位置
+7. 寻找这个字符串最后一次出现的位置(LastIndex)
 	```
 		str := "hello, world"
 		indx_int := strings.LastIndex(str, "l")
 		fmt.Println(indx_int)
 	```
 
-8. 拼接字符串
+8. 拼接字符串(Join)
 	```
 		str_slice := []string{"a", "b", "c"}
 		ret := strings.Join(str_slice, "-")
 		fmt.Println("8", ret)
 	```
 
-9. 通过某个格式，拆分字符串
+9. 通过某个格式，拆分字符串(Split)
 	```
 		str := "a-b-c"
 		ret_slice := strings.Split(str, "-")
@@ -178,7 +178,28 @@
 1. 作用：fmt包的函数用来格式化输出和扫描输入
 
 
+# 八、bufio包
+1. 作用：实现带缓冲的 I/O 操作，高效读写数据
 
+2. 创建读取器(NewScanner)
+	+ `scanner := bufio.NewScanner(os.Stdin)` — 从标准输入读取
+	+ `scanner := bufio.NewScanner(file)` — 从文件读取
+	+ `scanner := bufio.NewScanner(strings.NewReader(str))` — 从字符串读取
+
+3. bufio.Scanner变量
+	+ 新建变量：`input := bufio.NewScanner(os.Stdin)`
+	+ `input.Scan()` — 读取下一行，返回 bool（是否有数据）
+	+ 返回字符串：`input.Text()` — 获取当前行的内容
+
+4. 创建写入器(NewWriter)
+	+ `writer := bufio.NewWriter(os.Stdout)`
+	+ `writer.WriteString("hello")` — 写入字符串
+	+ `writer.Flush()` — 将缓冲数据刷新到输出
+
+5. 创建读取器(NewReader)
+	+ `reader := bufio.NewReader(os.Stdin)`
+	+ `reader.ReadString('\n')` — 读取直到遇到指定分隔符
+	+ `reader.ReadBytes('\n')` — 读取字节直到遇到指定分隔符
 
 
 
