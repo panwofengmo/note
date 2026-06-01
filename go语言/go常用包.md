@@ -181,7 +181,8 @@
 # 八、bufio包
 1. 作用：实现带缓冲的 I/O 操作，高效读写数据
 
-2. 创建读取器(NewScanner)
+2. bufio.NewScanner()函数
+	+ 创建读取器(NewScanner)
 	+ `scanner := bufio.NewScanner(os.Stdin)` — 从标准输入读取
 	+ `scanner := bufio.NewScanner(file)` — 从文件读取
 	+ `scanner := bufio.NewScanner(strings.NewReader(str))` — 从字符串读取
@@ -200,6 +201,32 @@
 	+ `reader := bufio.NewReader(os.Stdin)`
 	+ `reader.ReadString('\n')` — 读取直到遇到指定分隔符
 	+ `reader.ReadBytes('\n')` — 读取字节直到遇到指定分隔符
+
+
+# 九、os包
+1. os.Open函数
+	+ 打开文件
+	+ 语法：`func Open(name string) (file *File, err error)`
+	+ 参数：
+		+ name：要打开的文件名
+	+ 返回值：
+		+ file：打开的文件对象，类型：*os.File
+		+ err：打开时遇到的错误
+	+ 示例：
+		```
+		file, err := os.Open("test.txt")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+		```
+
+
+
+
+
+
 
 
 
