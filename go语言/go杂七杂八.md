@@ -170,7 +170,26 @@
 	}
 	```
 
+12. map
+	+ 声明与初始化
+	```
+	//仅声明，不能使用
+	var m map[string]int		//这个时候m为nil，不能直接使用
+	m["a"] = 1					//error:因为m为nil，不能直接使用
 
+	//make 初始化
+	m1 := make(map[string]int)
+	m1["age"] = 18
+	```
+	+ 读取
+	```
+	value, ok := m1["age"]		//如果key存在，ok为true，value为对应的值；如果key不存在，ok为false，value为值类型的默认值
+	if ok {
+		fmt.Println(value)
+	}else{
+		fmt.Println("key not found")
+	}
+	```
 
 
 
