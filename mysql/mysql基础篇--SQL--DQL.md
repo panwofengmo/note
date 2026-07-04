@@ -134,18 +134,39 @@
 		+ 每页记录数可以省略，默认是10条记录
 		+ 分页查询是数据库的方言，不同数据库有不同的实现，mysql中是LIMIT
 		+ 如果查询的是第一页数据，起始索引可以省略，直接简写为` LIMIT 10`
-	+ 实例
-		+ 查询第1页，每页显示10条记录
-			```
-			SELECT * FROM emp LIMIT 0, 10;
-			```
-		+ 查询第2页，每页显示10条记录
-			```
-			SELECT * FROM emp LIMIT 10, 10;
-			```
+
+2. 实例
+	+ 查询第1页，每页显示10条记录
+	```
+	SELECT * FROM emp LIMIT 0, 10;
+	```
+	+ 查询第2页，每页显示10条记录
+	```
+	SELECT * FROM emp LIMIT 10, 10;
+	```
 
 
+# 八、DQL-执行顺序
+1. 编写顺序
+```
+SELECT 字段列表
+FROM 表名
+WHERE 条件列表
+GROUP BY 分组字段列表
+HAVING 分组后条件列表
+ORDER BY 排序字段列表
+LIMIT 分页参数
+```
 
+2. 执行顺序
+	1. FROM 表名
+	2. WHERE 条件列表
+	3. GROUP BY 分组字段列表 HAVING 分组后条件列表
+	4. SELECT 字段列表
+	5. ORDER BY 排序字段列表
+	6. LIMIT 分页参数
+
+第22集2:20
 
 
 

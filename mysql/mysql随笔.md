@@ -8,7 +8,13 @@
 SELECT * FROM students ORDER BY score DESC, gender;
 ```
 
+3. 查询性别为男，并且年龄在20-40岁(含)以内的姓名为三个字的员工。
++ 难点在于：姓名为三个字
+```
+select * from emp where gender = '男' and age >= 20 and age <= 40 and name like '___';
+```
 
+4. 
 
 
 
